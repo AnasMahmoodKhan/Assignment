@@ -1,13 +1,13 @@
 import { applyMiddleware, createStore } from "redux";
 import { middlewares } from "../src/configureStore";
 
-import rootReducer from "../src/reducers";
+import reducer from "../src/reducers";
 
 export const storeFactory = (initialState) => {
   const createStoreWithMiddleware = applyMiddleware(...middlewares)(
     createStore
   );
-  return createStoreWithMiddleware(rootReducer, initialState);
+  return createStoreWithMiddleware(reducer, initialState);
 };
 
 export const findByTestAttr = (wrapper, val) => {

@@ -18,11 +18,11 @@ function reducer(state = initialStore, action) {
   }
 
   if (action.type === actionTypes.SET_TODOS) {
-    return { ...state, todos: action.payload };
+    return { ...state, todos: action.payload ? action.payload : [] };
   }
 
   if (action.type === actionTypes.SET_TODOS_LIST) {
-    return { ...state, todos_list: action.payload };
+    return { ...state, todos_list: action.payload ? action.payload : [] };
   }
 
   if (action.type === actionTypes.SET_ERROR) {

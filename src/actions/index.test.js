@@ -1,7 +1,6 @@
 import moxios from "moxios";
-
+import { getTodos, setTodosList } from "./";
 import { storeFactory } from "../../test/testUtils";
-import { getTodos } from "./";
 
 describe("getTodos action creater", () => {
   beforeEach(() => {
@@ -11,17 +10,18 @@ describe("getTodos action creater", () => {
     moxios.uninstall();
   });
 
+  let store = storeFactory();
+
   test("should add todos to state", () => {
     const todos = [
       {
-        userId: 1,
+        completed: false,
         id: 2,
         title: "quis ut nam facilis et officia qui",
-        completed: false,
+        userId: 1,
       },
     ];
 
-    let store = storeFactory();
     moxios.wait(() => {
       const request = moxios.requests.mostRecent();
       request.respondWith({
@@ -31,8 +31,43 @@ describe("getTodos action creater", () => {
     });
 
     return store.dispatch(getTodos()).then(() => {
-      const newState = store.getState();
-      expect(newState.todos).toBe(todos);
+      const stateCalled = store.getState();
+      expect(stateCalled.reducer.todos).toEqual(todos);
     });
+  });
+
+  test("should add `error : true` to state if fetch request fails", () => {
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 400,
+        response: true,
+      });
+    });
+
+    return store.dispatch(getTodos()).then(() => {
+      const newState = store.getState();
+      expect(newState.reducer.error).toBe(true);
+    });
+  });
+
+  test("should add todolist to state", () => {
+    const list = [
+      {
+        completed: false,
+        id: 2,
+        title: "quis ut nam facilis et officia qui",
+        userId: 1,
+      },
+      {
+        completed: true,
+        id: 3,
+        title: "fugiat veniam minus",
+        userId: 1,
+      },
+    ];
+    store.dispatch(setTodosList(list, 0, 0));
+    const newState = store.getState();
+    expect(newState.reducer.todos_list).toStrictEqual(list);
   });
 });
