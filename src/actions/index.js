@@ -6,6 +6,7 @@ export const actionTypes = {
   SET_PAGE: "SET_PAGE",
   SET_PAGE_SIZE: "SET_PAGE_SIZE",
   SET_TODOS_LIST: "SET_TODOS_LIST",
+  SET_ERROR: "SET_ERROR",
 };
 
 export function getTodos() {
@@ -26,6 +27,10 @@ export function getTodos() {
         dispatch({
           type: actionTypes.SET_TODOS,
           payload: [],
+        });
+        dispatch({
+          type: actionTypes.SET_ERROR,
+          payload: true,
         });
       });
   };

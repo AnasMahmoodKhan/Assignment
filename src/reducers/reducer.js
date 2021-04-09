@@ -5,6 +5,7 @@ const initialStore = {
   page: 0,
   page_size: 0,
   todos_list: [],
+  error: false,
 };
 
 function reducer(state = initialStore, action) {
@@ -22,6 +23,10 @@ function reducer(state = initialStore, action) {
 
   if (action.type === actionTypes.SET_TODOS_LIST) {
     return { ...state, todos_list: action.payload };
+  }
+
+  if (action.type === actionTypes.SET_ERROR) {
+    return { ...state, error: action.payload };
   }
 
   return state;

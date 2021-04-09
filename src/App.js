@@ -13,6 +13,7 @@ const App = ({
   todos,
   page_size,
   todos_list,
+  error,
 }) => {
   useEffect(() => {
     fetchTodos();
@@ -24,61 +25,67 @@ const App = ({
 
   return (
     <div className="App" data-test="App">
-      <div className="paginator-container">
-        <div className="App-paginator"></div>
-        <Paginator
-          data-test="Paginator"
-          hasPageSizeSelector
-          pageSizeOptions={[10, 25, 50]}
-          totalCount={todos.length || 0}
-          SingleSelect={{
-            DropMenu: { direction: "down" },
-          }}
-          onPageSelect={(pageSelected) => setPage(pageSelected)}
-          onPageSizeSelect={(pageSizeSelected) => {
-            setPageSize(pageSizeSelected);
-            setPage(0);
-          }}
-        />
-      </div>
+      {error ? (
+        <span>Something Went Wrong!</span>
+      ) : todos_list.length > 0 ? (
+        <React.Fragment>
+          <div className="paginator-container">
+            <Paginator
+              data-test="Paginator"
+              hasPageSizeSelector
+              pageSizeOptions={[10, 25, 50]}
+              totalCount={todos.length || 0}
+              SingleSelect={{
+                DropMenu: { direction: "down" },
+              }}
+              onPageSelect={(pageSelected) => setPage(pageSelected)}
+              onPageSizeSelect={(pageSizeSelected) => {
+                setPageSize(pageSizeSelected);
+                setPage(0);
+              }}
+            />
+          </div>
+          <div>
+            <DataTable data-test="DataTable" data={todos_list} minRows={10}>
+              <DataTable.Column
+                data-test="DateTableColumns"
+                field="id"
+                align="left"
+                width={200}
+              >
+                ID
+              </DataTable.Column>
 
-      <div>
-        <DataTable data-test="DataTable" data={todos_list}>
-          <DataTable.Column
-            data-test="DateTableColumns"
-            field="id"
-            align="left"
-            width={200}
-          >
-            ID
-          </DataTable.Column>
+              <DataTable.Column
+                data-test="DateTableColumns"
+                field="title"
+                align="left"
+                width={400}
+              >
+                TITLE
+              </DataTable.Column>
 
-          <DataTable.Column
-            data-test="DateTableColumns"
-            field="title"
-            align="left"
-            width={400}
-          >
-            First
-          </DataTable.Column>
-
-          <DataTable.Column
-            data-test="DateTableColumns"
-            field="completed"
-            align="left"
-            width={150}
-          >
-            Completed
-          </DataTable.Column>
-        </DataTable>
-      </div>
+              <DataTable.Column
+                data-test="DateTableColumns"
+                field="completed"
+                align="left"
+                width={150}
+              >
+                COMPLETED
+              </DataTable.Column>
+            </DataTable>
+          </div>
+        </React.Fragment>
+      ) : (
+        <span>Loading...</span>
+      )}
     </div>
   );
 };
 
 const mapStateToProps = (store) => {
-  const { todos, page, page_size, todos_list } = store.reducer;
-  return { todos, page, page_size, todos_list };
+  const { todos, page, page_size, todos_list, error } = store.reducer;
+  return { todos, page, page_size, todos_list, error };
 };
 
 const mapDispatchToProps = (dispatch) => {
