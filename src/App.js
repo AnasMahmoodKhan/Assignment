@@ -26,7 +26,7 @@ const App = ({
   return (
     <div className="App" data-test="App">
       {error ? (
-        <span>Something Went Wrong!</span>
+        <span data-test="Error">Something Went Wrong!</span>
       ) : todos_list.length > 0 ? (
         <React.Fragment>
           <div className="paginator-container">
@@ -77,7 +77,7 @@ const App = ({
           </div>
         </React.Fragment>
       ) : (
-        <span>Loading...</span>
+        <span data-test="Loading">Loading...</span>
       )}
     </div>
   );
