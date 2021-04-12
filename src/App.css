@@ -1,19 +1,18 @@
 .App {
   text-align: center;
 }
-
-.paginator-container{
+.App .paginator-container {
   margin: 25px;
-  
 }
-
-.App-paginator {
-  display: 'flex';
-  flex-direction: 'row';
-  align-items: 'center';
+.App .App-paginator {
+  display: "flex";
+  flex-direction: "row";
+  align-items: "center";
   margin-bottom: 10;
 }
-.lucid-Paginator{
+.App .lucid-Paginator {
   justify-content: center;
-    margin: 10px;
+  margin: 10px;
 }
+
+/*# sourceMappingURL=App.css.map */

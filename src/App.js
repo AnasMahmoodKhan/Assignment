@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
-import { actionTypes, getTodos, setTodosList } from "./actions";
+import { getTodos, setTodosList } from "./actions";
 import { connect } from "react-redux";
 import "./App.css";
 import { DataTable, Paginator } from "lucid-ui";
+import { actionTypes } from "./actions/actionTypes";
 
 const App = ({
   fetchTodos,
@@ -15,13 +16,28 @@ const App = ({
   todos_list,
   error,
 }) => {
+  const columns = [
+    { field: "id", title: "ID", align: "left", width: 200 },
+    {
+      field: "title",
+      title: "TITLE",
+      align: "left",
+      width: 400,
+    },
+    {
+      field: "completed",
+      title: "COMPLETED",
+      align: "left",
+      width: 200,
+    },
+  ];
   useEffect(() => {
     fetchTodos();
   }, [fetchTodos]);
 
   useEffect(() => {
     setTodosList(todos, page, page_size);
-  }, [page, page_size, setTodosList, todos]);
+  }, [page, page_size, todos]);
 
   return (
     <div className="App" data-test="App">
@@ -47,32 +63,15 @@ const App = ({
           </div>
           <div>
             <DataTable data-test="DataTable" data={todos_list} minRows={10}>
-              <DataTable.Column
-                data-test="DateTableColumns"
-                field="id"
-                align="left"
-                width={200}
-              >
-                ID
-              </DataTable.Column>
-
-              <DataTable.Column
-                data-test="DateTableColumns"
-                field="title"
-                align="left"
-                width={400}
-              >
-                TITLE
-              </DataTable.Column>
-
-              <DataTable.Column
-                data-test="DateTableColumns"
-                field="completed"
-                align="left"
-                width={150}
-              >
-                COMPLETED
-              </DataTable.Column>
+              {columns.map((column, i) => (
+                <DataTable.Column
+                  field={column.field}
+                  width={column.width}
+                  align={column.align}
+                >
+                  {column.title}
+                </DataTable.Column>
+              ))}
             </DataTable>
           </div>
         </React.Fragment>

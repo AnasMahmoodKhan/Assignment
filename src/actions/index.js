@@ -1,18 +1,10 @@
-import axios from "axios";
 import { SuccessIcon, DangerIcon } from "lucid-ui";
-
-export const actionTypes = {
-  SET_TODOS: "SET_TODOS",
-  SET_PAGE: "SET_PAGE",
-  SET_PAGE_SIZE: "SET_PAGE_SIZE",
-  SET_TODOS_LIST: "SET_TODOS_LIST",
-  SET_ERROR: "SET_ERROR",
-};
+import API from "../utils/API";
+import { actionTypes } from "./actionTypes";
 
 export function getTodos() {
   return async (dispatch) => {
-    await axios
-      .get("https://jsonplaceholder.typicode.com/todos")
+    await API.fetchTodos()
       .then((response) => {
         const todos = response.data.filter(
           (todo) =>

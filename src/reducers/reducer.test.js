@@ -1,4 +1,4 @@
-import { actionTypes } from "../actions";
+import { actionTypes } from "../actions/actionTypes";
 import reducer from "./reducer";
 
 test('should return default initial state of "null" when no action is passed', () => {
