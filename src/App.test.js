@@ -2,6 +2,7 @@ import React from "react";
 import { shallow } from "enzyme";
 import App from "./App";
 import { findByTestAttr, storeFactory } from "../test/testUtils";
+import { DataTable } from "lucid-ui";
 
 const setup = (initialState = {}) => {
   const store = storeFactory(initialState);
@@ -36,14 +37,6 @@ describe("App component", () => {
   });
 
   describe("condintional rendering todo_list", () => {
-    test("should render `Loading...` in case of todo_list being an empty array", () => {
-      const component = findByTestAttr(
-        setup({ reducer: { error: false, todos_list: [] } }),
-        "Loading"
-      );
-      expect(component.text()).toBe("Loading...");
-    });
-
     test("should render DataTable when todo_list array contains data", () => {
       const component = findByTestAttr(
         setup({
@@ -95,5 +88,45 @@ describe("App component", () => {
       );
       expect(component).toHaveLength(1);
     });
+  });
+});
+
+describe("DataTable Component", () => {
+  test("should have data in DataTable when DataTable renders", () => {
+    const stor = storeFactory({
+      reducer: {
+        error: false,
+        todos_list: [
+          {
+            userId: 1,
+            id: 1,
+            title: "delectus aut autem",
+            completed: false,
+          },
+        ],
+      },
+    });
+    const wrap = shallow(<App store={stor} />)
+      .dive()
+      .dive();
+    const dataTable = wrap.find(DataTable);
+    expect(dataTable).toHaveLength(1);
+    expect(dataTable.props().data).toEqual([
+      {
+        userId: 1,
+        id: 1,
+        title: "delectus aut autem",
+        completed: false,
+      },
+    ]);
+  });
+
+  test("when no data in DataTable", () => {
+    const stor = storeFactory();
+    const wrap = shallow(<App store={stor} />)
+      .dive()
+      .dive();
+    const dataTable = wrap.find(DataTable);
+    expect(dataTable.props().data).toEqual([]);
   });
 });

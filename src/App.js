@@ -43,14 +43,14 @@ const App = ({
     <div className="App" data-test="App">
       {error ? (
         <span data-test="Error">Something Went Wrong!</span>
-      ) : todos_list.length > 0 ? (
+      ) : (
         <React.Fragment>
           <div className="paginator-container">
             <Paginator
               data-test="Paginator"
               hasPageSizeSelector
               pageSizeOptions={[10, 25, 50]}
-              totalCount={todos.length || 0}
+              totalCount={todos ? todos.length : 0}
               SingleSelect={{
                 DropMenu: { direction: "down" },
               }}
@@ -62,9 +62,10 @@ const App = ({
             />
           </div>
           <div>
-            <DataTable data-test="DataTable" data={todos_list} minRows={10}>
+            <DataTable data-test="DataTable" data={todos_list} minRows={0}>
               {columns.map((column, i) => (
                 <DataTable.Column
+                  key={i}
                   field={column.field}
                   width={column.width}
                   align={column.align}
@@ -75,8 +76,6 @@ const App = ({
             </DataTable>
           </div>
         </React.Fragment>
-      ) : (
-        <span data-test="Loading">Loading...</span>
       )}
     </div>
   );
