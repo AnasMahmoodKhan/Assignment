@@ -48,10 +48,11 @@ const App = ({
         <span data-test="Error">Something Went Wrong!</span>
       ) : (
         <React.Fragment>
-          <div className="SearchField">
+          <div className="SearchField" data-test="SearchField">
             <SearchField
               placeholder={"Search by Title..."}
               onChange={(value) => setSearch(value)}
+              value={search_text}
               onSubmit={() => {
                 setPage(0);
                 setPageSize(0);

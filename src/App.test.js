@@ -2,7 +2,7 @@ import React from "react";
 import { shallow } from "enzyme";
 import App from "./App";
 import { findByTestAttr, storeFactory } from "../test/testUtils";
-import { DataTable } from "lucid-ui";
+import { DataTable, Paginator, SearchField } from "lucid-ui";
 
 const setup = (initialState = {}) => {
   const store = storeFactory(initialState);
@@ -128,5 +128,77 @@ describe("DataTable Component", () => {
       .dive();
     const dataTable = wrap.find(DataTable);
     expect(dataTable.props().data).toEqual([]);
+  });
+});
+
+describe("SearchField Component", () => {
+  let wrap;
+  beforeEach(() => {
+    wrap = setup();
+  });
+  test("should render SearchField with placeholder `Search by Title...`", () => {
+    const searchField = wrap.find(SearchField);
+    expect(searchField).toHaveLength(1);
+    expect(searchField.props().placeholder).toEqual("Search by Title...");
+  });
+});
+
+describe("Paginator Component", () => {
+  let wrap;
+  beforeEach(() => {
+    wrap = setup();
+  });
+  test("should render Paginator with selectedPageIndex `0` and selectedPageSize `0`", () => {
+    const paginator = wrap.find(Paginator);
+    expect(paginator).toHaveLength(1);
+    expect(paginator.props().selectedPageIndex).toEqual(0);
+    expect(paginator.props().selectedPageSizeIndex).toEqual(0);
+  });
+});
+
+describe("SearchFieldf", () => {
+  let store;
+  let wrapper;
+  beforeEach(() => {
+    store = storeFactory({ reducer: { page: 1, search_text: "" } });
+
+    wrapper = shallow(<App store={store} />)
+      .dive()
+      .dive();
+  });
+  it("should dispatch changes to search_text on changes of searchField", () => {
+    const search = wrapper.find(SearchField);
+    search.simulate("change", "del");
+    expect(store.getState().reducer.search_text).toEqual("del");
+  });
+
+  it("should reset page to 0 onSubmit of SearchField", () => {
+    const search = wrapper.find(SearchField);
+    search.simulate("submit");
+    expect(store.getState().reducer.page).toEqual(0);
+  });
+});
+
+describe("Paginator", () => {
+  let store;
+  let wrapper;
+  beforeEach(() => {
+    store = storeFactory({ reducer: { page: 1, page_size: 0 } });
+
+    wrapper = shallow(<App store={store} />)
+      .dive()
+      .dive();
+  });
+  it("should dispatch changes to search_text on changes of searchField", () => {
+    const search = wrapper.find(Paginator);
+    search.props().onPageSelect(3);
+    expect(store.getState().reducer.page).toEqual(3);
+  });
+
+  it("should reset page to 0 onSubmit of SearchField", () => {
+    const search = wrapper.find(Paginator);
+
+    search.props().onPageSizeSelect(2);
+    expect(store.getState().reducer.page_size).toEqual(2);
   });
 });
