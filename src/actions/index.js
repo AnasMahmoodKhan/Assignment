@@ -42,3 +42,38 @@ export function setTodosList(todos, page, page_size) {
     });
   };
 }
+
+export function setSearchText(text) {
+  return async (dispatch) => {
+    await API.fetchTodos()
+      .then((response) => {
+        const todos = response.data
+          .filter((todo) => {
+            let pattern = new RegExp(text);
+            return todo.title.match(pattern);
+          })
+          .filter(
+            (todo) =>
+              (todo.completed = todo.completed ? (
+                <SuccessIcon />
+              ) : (
+                <DangerIcon />
+              ))
+          );
+        dispatch({
+          type: actionTypes.SET_TODOS,
+          payload: todos,
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: actionTypes.SET_TODOS,
+          payload: [],
+        });
+        dispatch({
+          type: actionTypes.SET_ERROR,
+          payload: true,
+        });
+      });
+  };
+}

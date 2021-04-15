@@ -6,6 +6,7 @@ const initialStore = {
   page_size: 0,
   todos_list: [],
   error: false,
+  search_text: "",
 };
 
 function reducer(state = initialStore, action) {
@@ -29,6 +30,9 @@ function reducer(state = initialStore, action) {
     return { ...state, error: action.payload };
   }
 
+  if (action.type === actionTypes.SET_SEARCH_TEXT) {
+    return { ...state, search_text: action.payload };
+  }
   return state;
 }
 

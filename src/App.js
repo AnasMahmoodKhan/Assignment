@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import { getTodos, setTodosList } from "./actions";
+import { getTodos, setSearchText, setTodosList } from "./actions";
 import { connect } from "react-redux";
 import "./App.css";
-import { DataTable, Paginator } from "lucid-ui";
+import { DataTable, Paginator, SearchField } from "lucid-ui";
 import { actionTypes } from "./actions/actionTypes";
 
 const App = ({
@@ -15,6 +15,9 @@ const App = ({
   page_size,
   todos_list,
   error,
+  search_text,
+  setSearch,
+  fetchSearchedTodos,
 }) => {
   const columns = [
     { field: "id", title: "ID", align: "left", width: 200 },
@@ -45,6 +48,18 @@ const App = ({
         <span data-test="Error">Something Went Wrong!</span>
       ) : (
         <React.Fragment>
+          <div className="SearchField">
+            <SearchField
+              placeholder={"Search by Title..."}
+              onChange={(value) => setSearch(value)}
+              isValid={search_text.length > 0}
+              onSubmit={() => {
+                setPage(0);
+                setPageSize(0);
+                fetchSearchedTodos(search_text);
+              }}
+            />
+          </div>
           <div className="paginator-container">
             <Paginator
               data-test="Paginator"
@@ -54,6 +69,8 @@ const App = ({
               SingleSelect={{
                 DropMenu: { direction: "down" },
               }}
+              selectedPageIndex={page}
+              selectedPageSizeIndex={page_size}
               onPageSelect={(pageSelected) => setPage(pageSelected)}
               onPageSizeSelect={(pageSizeSelected) => {
                 setPageSize(pageSizeSelected);
@@ -82,8 +99,15 @@ const App = ({
 };
 
 const mapStateToProps = (store) => {
-  const { todos, page, page_size, todos_list, error } = store.reducer;
-  return { todos, page, page_size, todos_list, error };
+  const {
+    todos,
+    page,
+    page_size,
+    todos_list,
+    error,
+    search_text,
+  } = store.reducer;
+  return { todos, page, page_size, todos_list, error, search_text };
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -94,6 +118,9 @@ const mapDispatchToProps = (dispatch) => {
       dispatch({ type: actionTypes.SET_PAGE_SIZE, payload: pageSize }),
     setTodosList: (todos, page, pageSize) =>
       dispatch(setTodosList(todos, page, pageSize)),
+    setSearch: (value) =>
+      dispatch({ type: actionTypes.SET_SEARCH_TEXT, payload: value }),
+    fetchSearchedTodos: (text) => dispatch(setSearchText(text)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(App);
