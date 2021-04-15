@@ -9,6 +9,7 @@ test('should return default initial state of "null" when no action is passed', (
     page_size: 0,
     todos: [],
     todos_list: [],
+    search_text: "",
   });
 });
 
@@ -24,6 +25,7 @@ test('should return state of array of todos upon receiving an action of type "SE
     page_size: 0,
     todos: [{ userId: 1, id: 1, title: "delectus aut autem" }],
     todos_list: [],
+    search_text: "",
   });
 });
 
@@ -39,6 +41,7 @@ test('should return state of page upon receiving an action of type "SET_PAGE"', 
     page_size: 0,
     todos: [],
     todos_list: [],
+    search_text: "",
   });
 });
 
@@ -54,6 +57,7 @@ test('should return state of page_size upon receiving an action of type "SET_PAG
     page_size: 1,
     todos: [],
     todos_list: [],
+    search_text: "",
   });
 });
 
@@ -69,6 +73,7 @@ test('should return state of array of todos_list upon receiving an action of typ
     page_size: 0,
     todos: [],
     todos_list: [{ userId: 1, id: 1, title: "delectus aut autem" }],
+    search_text: "",
   });
 });
 
@@ -84,5 +89,22 @@ test('should return state of error upon receiving an action of type "SET_ERROR"'
     page_size: 0,
     todos: [],
     todos_list: [],
+    search_text: "",
+  });
+});
+
+test('should return state of search_text upon receiving an action of type "SET_SEARCH_TEXT"', () => {
+  const newState = reducer(undefined, {
+    type: actionTypes.SET_SEARCH_TEXT,
+    payload: "dele",
+  });
+
+  expect(newState).toStrictEqual({
+    error: false,
+    page: 0,
+    page_size: 0,
+    todos: [],
+    todos_list: [],
+    search_text: "dele",
   });
 });

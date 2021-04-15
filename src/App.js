@@ -52,7 +52,6 @@ const App = ({
             <SearchField
               placeholder={"Search by Title..."}
               onChange={(value) => setSearch(value)}
-              isValid={search_text.length > 0}
               onSubmit={() => {
                 setPage(0);
                 setPageSize(0);

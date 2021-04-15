@@ -1,5 +1,5 @@
 import moxios from "moxios";
-import { getTodos, setTodosList } from "./";
+import { getTodos, setSearchText, setTodosList } from "./";
 import { storeFactory } from "../../test/testUtils";
 
 describe("getTodos action creater", () => {
@@ -69,5 +69,55 @@ describe("getTodos action creater", () => {
     store.dispatch(setTodosList(list, 0, 0));
     const newState = store.getState();
     expect(newState.reducer.todos_list).toStrictEqual(list);
+  });
+});
+
+describe("setSearchText action creater", () => {
+  beforeEach(() => {
+    moxios.install();
+  });
+  afterEach(() => {
+    moxios.uninstall();
+  });
+
+  let store = storeFactory();
+
+  test("should add todos to state", () => {
+    const todos = [
+      {
+        completed: false,
+        id: 2,
+        title: "quis ut nam facilis et officia qui",
+        userId: 1,
+      },
+    ];
+
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: todos,
+      });
+    });
+
+    return store.dispatch(setSearchText("")).then(() => {
+      const stateCalled = store.getState();
+      expect(stateCalled.reducer.todos).toEqual(todos);
+    });
+  });
+
+  test("should add `error : true` to state if fetch request fails", () => {
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 400,
+        response: true,
+      });
+    });
+
+    return store.dispatch(setSearchText("")).then(() => {
+      const newState = store.getState();
+      expect(newState.reducer.error).toBe(true);
+    });
   });
 });
