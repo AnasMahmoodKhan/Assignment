@@ -189,16 +189,17 @@ describe("Paginator", () => {
       .dive()
       .dive();
   });
-  it("should dispatch changes to search_text on changes of searchField", () => {
+  it("should update current page onPageSelect event", () => {
     const search = wrapper.find(Paginator);
     search.props().onPageSelect(3);
     expect(store.getState().reducer.page).toEqual(3);
   });
 
-  it("should reset page to 0 onSubmit of SearchField", () => {
+  it("should update pageSize onPageSizeSelect and reset currentPage to 0", () => {
     const search = wrapper.find(Paginator);
 
     search.props().onPageSizeSelect(2);
     expect(store.getState().reducer.page_size).toEqual(2);
+    expect(store.getState().reducer.page).toEqual(0);
   });
 });
