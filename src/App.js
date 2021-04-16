@@ -5,6 +5,11 @@ import "./App.css";
 import { DataTable, Paginator, SearchField } from "lucid-ui";
 import { actionTypes } from "./actions/actionTypes";
 
+const {
+  EmptyStateWrapper,
+  EmptyStateWrapper: { Title, Body },
+} = DataTable;
+
 const App = ({
   fetchTodos,
   setPage,
@@ -60,36 +65,47 @@ const App = ({
               }}
             />
           </div>
-          <div className="paginator-container">
-            <Paginator
-              data-test="Paginator"
-              hasPageSizeSelector
-              pageSizeOptions={[10, 25, 50]}
-              totalCount={todos ? todos.length : 0}
-              SingleSelect={{
-                DropMenu: { direction: "down" },
-              }}
-              selectedPageIndex={page}
-              selectedPageSizeIndex={page_size}
-              onPageSelect={(pageSelected) => setPage(pageSelected)}
-              onPageSizeSelect={(pageSizeSelected) => {
-                setPageSize(pageSizeSelected);
-                setPage(0);
-              }}
-            />
-          </div>
+
           <div>
+            {todos_list
+              ? todos_list.length > 0 && (
+                  <div className="paginator-container">
+                    <Paginator
+                      data-test="Paginator"
+                      hasPageSizeSelector
+                      pageSizeOptions={[10, 25, 50]}
+                      totalCount={todos ? todos.length : 0}
+                      SingleSelect={{
+                        DropMenu: { direction: "down" },
+                      }}
+                      selectedPageIndex={page}
+                      selectedPageSizeIndex={page_size}
+                      onPageSelect={(pageSelected) => setPage(pageSelected)}
+                      onPageSizeSelect={(pageSizeSelected) => {
+                        setPageSize(pageSizeSelected);
+                        setPage(0);
+                      }}
+                    />
+                  </div>
+                )
+              : null}
             <DataTable data-test="DataTable" data={todos_list} minRows={0}>
-              {columns.map((column, i) => (
-                <DataTable.Column
-                  key={i}
-                  field={column.field}
-                  width={column.width}
-                  align={column.align}
-                >
-                  {column.title}
-                </DataTable.Column>
-              ))}
+              <EmptyStateWrapper>
+                <Title>Todos searched not found.</Title>
+              </EmptyStateWrapper>
+              {todos_list
+                ? todos_list.length > 0 &&
+                  columns.map((column, i) => (
+                    <DataTable.Column
+                      key={i}
+                      field={column.field}
+                      width={column.width}
+                      align={column.align}
+                    >
+                      {column.title}
+                    </DataTable.Column>
+                  ))
+                : null}
             </DataTable>
           </div>
         </React.Fragment>

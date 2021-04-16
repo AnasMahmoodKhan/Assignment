@@ -143,20 +143,7 @@ describe("SearchField Component", () => {
   });
 });
 
-describe("Paginator Component", () => {
-  let wrap;
-  beforeEach(() => {
-    wrap = setup();
-  });
-  test("should render Paginator with selectedPageIndex `0` and selectedPageSize `0`", () => {
-    const paginator = wrap.find(Paginator);
-    expect(paginator).toHaveLength(1);
-    expect(paginator.props().selectedPageIndex).toEqual(0);
-    expect(paginator.props().selectedPageSizeIndex).toEqual(0);
-  });
-});
-
-describe("SearchFieldf", () => {
+describe("SearchField", () => {
   let store;
   let wrapper;
   beforeEach(() => {
@@ -179,26 +166,62 @@ describe("SearchFieldf", () => {
   });
 });
 
-describe("Paginator", () => {
+describe("Paginator Component", () => {
   let store;
   let wrapper;
   beforeEach(() => {
-    store = storeFactory({ reducer: { page: 1, page_size: 0 } });
+    store = storeFactory({
+      reducer: {
+        page: 1,
+        page_size: 0,
+        todos_list: [
+          {
+            userId: 1,
+            id: 1,
+            title: "delectus aut autem",
+            completed: false,
+          },
+        ],
+      },
+    });
 
     wrapper = shallow(<App store={store} />)
       .dive()
       .dive();
   });
+  test("should render Paginator with selectedPageIndex `0` and selectedPageSize `0`", () => {
+    const paginator = wrapper.find(Paginator);
+    expect(paginator).toHaveLength(1);
+    expect(paginator.props().selectedPageIndex).toEqual(1);
+    expect(paginator.props().selectedPageSizeIndex).toEqual(0);
+  });
+
+  test("should not render Paginator when todo_list is empty", () => {
+    store = storeFactory({
+      reducer: {
+        page: 0,
+        page_size: 0,
+        todos_list: [],
+      },
+    });
+
+    wrapper = shallow(<App store={store} />)
+      .dive()
+      .dive();
+    const paginator = wrapper.find(Paginator);
+    expect(paginator).toHaveLength(0);
+  });
+
   it("should update current page onPageSelect event", () => {
-    const search = wrapper.find(Paginator);
-    search.props().onPageSelect(3);
+    const paginator = wrapper.find(Paginator);
+    paginator.props().onPageSelect(3);
     expect(store.getState().reducer.page).toEqual(3);
   });
 
   it("should update pageSize onPageSizeSelect and reset currentPage to 0", () => {
-    const search = wrapper.find(Paginator);
+    const paginator = wrapper.find(Paginator);
 
-    search.props().onPageSizeSelect(2);
+    paginator.props().onPageSizeSelect(2);
     expect(store.getState().reducer.page_size).toEqual(2);
     expect(store.getState().reducer.page).toEqual(0);
   });
