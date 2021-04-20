@@ -7,7 +7,7 @@ import { actionTypes } from "./actions/actionTypes";
 
 const {
   EmptyStateWrapper,
-  EmptyStateWrapper: { Title, Body },
+  EmptyStateWrapper: { Title },
 } = DataTable;
 
 const App = ({
@@ -47,6 +47,17 @@ const App = ({
     setTodosList(todos, page, page_size);
   }, [page, page_size, todos]);
 
+  const onSubmitHandler = () => {
+    setPage(0);
+    setPageSize(0);
+    fetchSearchedTodos(search_text);
+  };
+
+  const onPageSizeSelectHandler = (pageSizeSelected) => {
+    setPageSize(pageSizeSelected);
+    setPage(0);
+  };
+
   return (
     <div className="App" data-test="App">
       {error ? (
@@ -58,11 +69,7 @@ const App = ({
               placeholder={"Search by Title..."}
               onChange={(value) => setSearch(value)}
               value={search_text}
-              onSubmit={() => {
-                setPage(0);
-                setPageSize(0);
-                fetchSearchedTodos(search_text);
-              }}
+              onSubmit={onSubmitHandler}
             />
           </div>
 
@@ -81,16 +88,15 @@ const App = ({
                       selectedPageIndex={page}
                       selectedPageSizeIndex={page_size}
                       onPageSelect={(pageSelected) => setPage(pageSelected)}
-                      onPageSizeSelect={(pageSizeSelected) => {
-                        setPageSize(pageSizeSelected);
-                        setPage(0);
-                      }}
+                      onPageSizeSelect={(pageSizeSelected) =>
+                        onPageSizeSelectHandler(pageSizeSelected)
+                      }
                     />
                   </div>
                 )
               : null}
             <DataTable data-test="DataTable" data={todos_list} minRows={0}>
-              <EmptyStateWrapper>
+              <EmptyStateWrapper style={{ margin: "25px" }}>
                 <Title>Todos searched not found.</Title>
               </EmptyStateWrapper>
               {todos_list
