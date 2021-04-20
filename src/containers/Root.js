@@ -1,8 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
+
 import { getTodos, setSearchText, setTodosList } from "../actions";
 import { actionTypes } from "../actions/actionTypes";
 import App from "./App";
+import PropTypes from "prop-types";
 
 const Root = ({
   fetchTodos,
@@ -60,6 +62,30 @@ const mapDispatchToProps = (dispatch) => {
       dispatch({ type: actionTypes.SET_SEARCH_TEXT, payload: value }),
     fetchSearchedTodos: (text) => dispatch(setSearchText(text)),
   };
+};
+
+Root.defaultProps = {
+  page: 0,
+  todos: [],
+  page_size: 0,
+  todos_list: [],
+  error: false,
+  search_text: "",
+};
+
+Root.propTypes = {
+  page: PropTypes.number,
+  todos: PropTypes.array.isRequired,
+  page_size: PropTypes.number,
+  todos_list: PropTypes.array.isRequired,
+  error: PropTypes.bool.isRequired,
+  search_text: PropTypes.string,
+  fetchTodos: PropTypes.func.isRequired,
+  setPage: PropTypes.func,
+  setPageSize: PropTypes.func,
+  setTodosList: PropTypes.func,
+  setSearch: PropTypes.func,
+  fetchSearchedTodos: PropTypes.func,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Root);

@@ -1,8 +1,30 @@
 import React from "react";
 import { shallow } from "enzyme";
-import { findByTestAttr, storeFactory } from "../../test/testUtils";
+import { findByTestAttr, storeFactory, checkProps } from "../../test/testUtils";
 import { DataTable, Paginator, SearchField } from "lucid-ui";
 import Root from "./Root";
+import App from "./App";
+
+const mockTodos = [
+  {
+    userId: 1,
+    id: 1,
+    title: "delectus aut autem",
+    completed: false,
+  },
+  {
+    userId: 1,
+    id: 2,
+    title: "quis ut nam facilis et officia qui",
+    completed: false,
+  },
+  {
+    userId: 1,
+    id: 3,
+    title: "fugiat veniam minus",
+    completed: false,
+  },
+];
 
 const setup = (initialState = {}) => {
   const store = storeFactory(initialState);
@@ -11,6 +33,15 @@ const setup = (initialState = {}) => {
     .dive()
     .dive();
   return wrapper;
+};
+
+const setupWithStore = (initialState = {}) => {
+  const store = storeFactory(initialState);
+  const wrapper = shallow(<Root store={store} />)
+    .dive()
+    .dive()
+    .dive();
+  return { wrapper, store };
 };
 
 describe("App component", () => {
@@ -43,46 +74,8 @@ describe("App component", () => {
         setup({
           reducer: {
             error: false,
-            todos_list: [
-              {
-                userId: 1,
-                id: 1,
-                title: "delectus aut autem",
-                completed: false,
-              },
-              {
-                userId: 1,
-                id: 2,
-                title: "quis ut nam facilis et officia qui",
-                completed: false,
-              },
-              {
-                userId: 1,
-                id: 3,
-                title: "fugiat veniam minus",
-                completed: false,
-              },
-            ],
-            todos: [
-              {
-                userId: 1,
-                id: 1,
-                title: "delectus aut autem",
-                completed: false,
-              },
-              {
-                userId: 1,
-                id: 2,
-                title: "quis ut nam facilis et officia qui",
-                completed: false,
-              },
-              {
-                userId: 1,
-                id: 3,
-                title: "fugiat veniam minus",
-                completed: false,
-              },
-            ],
+            todos_list: mockTodos,
+            todos: mockTodos,
           },
         }),
         "DataTable"
@@ -94,41 +87,20 @@ describe("App component", () => {
 
 describe("DataTable Component", () => {
   test("should have data in DataTable when DataTable renders", () => {
-    const stor = storeFactory({
+    const wrap = setup({
       reducer: {
         error: false,
-        todos_list: [
-          {
-            userId: 1,
-            id: 1,
-            title: "delectus aut autem",
-            completed: false,
-          },
-        ],
+        todos_list: mockTodos,
       },
     });
-    const wrap = shallow(<Root store={stor} />)
-      .dive()
-      .dive()
-      .dive();
+
     const dataTable = wrap.find(DataTable);
     expect(dataTable).toHaveLength(1);
-    expect(dataTable.props().data).toEqual([
-      {
-        userId: 1,
-        id: 1,
-        title: "delectus aut autem",
-        completed: false,
-      },
-    ]);
+    expect(dataTable.props().data).toEqual(mockTodos);
   });
 
   test("when no data in DataTable", () => {
-    const stor = storeFactory();
-    const wrap = shallow(<Root store={stor} />)
-      .dive()
-      .dive()
-      .dive();
+    const wrap = setup();
     const dataTable = wrap.find(DataTable);
     expect(dataTable.props().data).toEqual([]);
   });
@@ -150,12 +122,11 @@ describe("SearchField", () => {
   let store;
   let wrapper;
   beforeEach(() => {
-    store = storeFactory({ reducer: { page: 1, search_text: "" } });
-
-    wrapper = shallow(<Root store={store} />)
-      .dive()
-      .dive()
-      .dive();
+    const StoreWithWrapper = setupWithStore({
+      reducer: { page: 1, search_text: "" },
+    });
+    store = StoreWithWrapper.store;
+    wrapper = StoreWithWrapper.wrapper;
   });
   it("should dispatch changes to search_text on changes of searchField", () => {
     const search = wrapper.find(SearchField);
@@ -174,25 +145,15 @@ describe("Paginator Component", () => {
   let store;
   let wrapper;
   beforeEach(() => {
-    store = storeFactory({
+    const StoreWithWrapper = setupWithStore({
       reducer: {
         page: 1,
         page_size: 0,
-        todos_list: [
-          {
-            userId: 1,
-            id: 1,
-            title: "delectus aut autem",
-            completed: false,
-          },
-        ],
+        todos_list: mockTodos,
       },
     });
-
-    wrapper = shallow(<Root store={store} />)
-      .dive()
-      .dive()
-      .dive();
+    store = StoreWithWrapper.store;
+    wrapper = StoreWithWrapper.wrapper;
   });
   test("should render Paginator with selectedPageIndex `0` and selectedPageSize `0`", () => {
     const paginator = wrapper.find(Paginator);
@@ -202,18 +163,15 @@ describe("Paginator Component", () => {
   });
 
   test("should not render Paginator when todo_list is empty", () => {
-    store = storeFactory({
+    const StoreWithWrapper = setupWithStore({
       reducer: {
         page: 0,
         page_size: 0,
         todos_list: [],
       },
     });
-
-    wrapper = shallow(<Root store={store} />)
-      .dive()
-      .dive()
-      .dive();
+    store = StoreWithWrapper.store;
+    wrapper = StoreWithWrapper.wrapper;
     const paginator = wrapper.find(Paginator);
     expect(paginator).toHaveLength(0);
   });
@@ -231,4 +189,14 @@ describe("Paginator Component", () => {
     expect(store.getState().reducer.page_size).toEqual(2);
     expect(store.getState().reducer.page).toEqual(0);
   });
+});
+
+test("does not throw warning with expected props", () => {
+  const expectedProps = {
+    todos: [],
+    todos_list: [],
+    error: false,
+    fetchTodos: () => {},
+  };
+  checkProps(App, expectedProps);
 });

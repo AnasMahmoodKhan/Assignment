@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import PropTypes from "prop-types";
+
 import "./styles/App.css";
 
 import { DataTable, Paginator, SearchField } from "lucid-ui";
@@ -102,6 +104,30 @@ const App = ({
       )}
     </div>
   );
+};
+
+App.defaultProps = {
+  page: 0,
+  todos: [],
+  page_size: 0,
+  todos_list: [],
+  error: false,
+  search_text: "",
+};
+
+App.propTypes = {
+  page: PropTypes.number,
+  todos: PropTypes.array.isRequired,
+  page_size: PropTypes.number,
+  todos_list: PropTypes.array.isRequired,
+  error: PropTypes.bool.isRequired,
+  search_text: PropTypes.string,
+  fetchTodos: PropTypes.func.isRequired,
+  setPage: PropTypes.func,
+  setPageSize: PropTypes.func,
+  setTodosList: PropTypes.func,
+  setSearch: PropTypes.func,
+  fetchSearchedTodos: PropTypes.func,
 };
 
 export default App;
