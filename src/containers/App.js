@@ -113,6 +113,12 @@ App.defaultProps = {
   todos_list: [],
   error: false,
   search_text: "",
+  setPage: () => {},
+  fetchTodos: () => {},
+  setPageSize: () => {},
+  setTodosList: () => {},
+  setSearch: () => {},
+  fetchSearchedTodos: () => {},
 };
 
 App.propTypes = {

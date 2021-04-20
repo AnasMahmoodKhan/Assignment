@@ -71,6 +71,12 @@ Root.defaultProps = {
   todos_list: [],
   error: false,
   search_text: "",
+  setPage: () => {},
+  fetchTodos: () => {},
+  setPageSize: () => {},
+  setTodosList: () => {},
+  setSearch: () => {},
+  fetchSearchedTodos: () => {},
 };
 
 Root.propTypes = {
