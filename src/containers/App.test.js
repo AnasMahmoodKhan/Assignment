@@ -1,12 +1,13 @@
 import React from "react";
 import { shallow } from "enzyme";
-import App from "./App";
-import { findByTestAttr, storeFactory } from "../test/testUtils";
+import { findByTestAttr, storeFactory } from "../../test/testUtils";
 import { DataTable, Paginator, SearchField } from "lucid-ui";
+import Root from "./Root";
 
 const setup = (initialState = {}) => {
   const store = storeFactory(initialState);
-  const wrapper = shallow(<App store={store} />)
+  const wrapper = shallow(<Root store={store} />)
+    .dive()
     .dive()
     .dive();
   return wrapper;
@@ -106,7 +107,8 @@ describe("DataTable Component", () => {
         ],
       },
     });
-    const wrap = shallow(<App store={stor} />)
+    const wrap = shallow(<Root store={stor} />)
+      .dive()
       .dive()
       .dive();
     const dataTable = wrap.find(DataTable);
@@ -123,7 +125,8 @@ describe("DataTable Component", () => {
 
   test("when no data in DataTable", () => {
     const stor = storeFactory();
-    const wrap = shallow(<App store={stor} />)
+    const wrap = shallow(<Root store={stor} />)
+      .dive()
       .dive()
       .dive();
     const dataTable = wrap.find(DataTable);
@@ -149,7 +152,8 @@ describe("SearchField", () => {
   beforeEach(() => {
     store = storeFactory({ reducer: { page: 1, search_text: "" } });
 
-    wrapper = shallow(<App store={store} />)
+    wrapper = shallow(<Root store={store} />)
+      .dive()
       .dive()
       .dive();
   });
@@ -185,7 +189,8 @@ describe("Paginator Component", () => {
       },
     });
 
-    wrapper = shallow(<App store={store} />)
+    wrapper = shallow(<Root store={store} />)
+      .dive()
       .dive()
       .dive();
   });
@@ -205,7 +210,8 @@ describe("Paginator Component", () => {
       },
     });
 
-    wrapper = shallow(<App store={store} />)
+    wrapper = shallow(<Root store={store} />)
+      .dive()
       .dive()
       .dive();
     const paginator = wrapper.find(Paginator);
