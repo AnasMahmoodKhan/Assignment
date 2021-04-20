@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import "./App.css";
 import { DataTable, Paginator, SearchField } from "lucid-ui";
 import { actionTypes } from "./actions/actionTypes";
-
+import { columns } from "./utils/columns";
 const {
   EmptyStateWrapper,
   EmptyStateWrapper: { Title },
@@ -24,21 +24,6 @@ const App = ({
   setSearch,
   fetchSearchedTodos,
 }) => {
-  const columns = [
-    { field: "id", title: "ID", align: "left", width: 200 },
-    {
-      field: "title",
-      title: "TITLE",
-      align: "left",
-      width: 400,
-    },
-    {
-      field: "completed",
-      title: "COMPLETED",
-      align: "left",
-      width: 200,
-    },
-  ];
   useEffect(() => {
     fetchTodos();
   }, [fetchTodos]);
