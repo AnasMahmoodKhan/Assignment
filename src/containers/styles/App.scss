@@ -1,0 +1,26 @@
+.App {
+    text-align: center;
+
+    .SearchField {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .paginator-container {
+        margin: 25px;
+
+    }
+
+    .App-paginator {
+        display: 'flex';
+        flex-direction: 'row';
+        align-items: 'center';
+        margin-bottom: 10;
+    }
+
+    .lucid-Paginator {
+        justify-content: center;
+        margin: 10px;
+    }
+}

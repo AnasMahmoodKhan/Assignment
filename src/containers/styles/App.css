@@ -1,0 +1,23 @@
+.App {
+  text-align: center;
+}
+.App .SearchField {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+.App .paginator-container {
+  margin: 25px;
+}
+.App .App-paginator {
+  display: "flex";
+  flex-direction: "row";
+  align-items: "center";
+  margin-bottom: 10;
+}
+.App .lucid-Paginator {
+  justify-content: center;
+  margin: 10px;
+}
+
+/*# sourceMappingURL=App.css.map */
